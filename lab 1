@@ -1,0 +1,31 @@
+int main(int argc, char** argv)
+{
+  int l, c ,w, flag;
+  char s;
+  l=0;
+  w=0;
+  c=0;
+  flag=1;
+  FILE *fin;
+  fin = fopen(argv[0], "r");
+  while (fscanf(fin,"%c",&s) == 1) {
+        if(l == 0)
+            l=1;
+        if (!(s==' ' || s=='\n') && flag==1) {
+            w=w+1;
+            flag=0;
+        }
+        if (s==' ')
+            flag=1;
+
+
+        if (s=='\n'){
+            l=l+1;
+            flag=1;
+        }
+        c=c+1;
+  }
+  printf("%d %d %d\n", l,c,w);
+  fclose(fin);
+  return 0;
+}
