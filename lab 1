@@ -1,31 +1,53 @@
-int main(int argc, char** argv)
+#include <stdio.h>
+#include <stdlib.h>
+
+int main(int argc, char* argv[])
 {
-  int l, c ,w, flag;
-  char s;
-  l=0;
-  w=0;
-  c=0;
-  flag=1;
-  FILE *fin;
-  fin = fopen(argv[0], "r");
-  while (fscanf(fin,"%c",&s) == 1) {
-        if(l == 0)
-            l=1;
-        if (!(s==' ' || s=='\n') && flag==1) {
-            w=w+1;
-            flag=0;
-        }
-        if (s==' ')
-            flag=1;
+    int c;
+    int l=1, w=0, b=0;
+    int flag=0;
+    FILE *fin;
+    fin = fopen(argv[2], "rb");
+    while ( *argv[1]=='-')
+        argv[1]++;
 
-
-        if (s=='\n'){
-            l=l+1;
-            flag=1;
+    switch (*argv [1] )
+    {
+    case 'l':
+        while ( ( c=fgetc(fin) )!=EOF ){
+        flag=0;
+            if ( c=='\n' ){
+                l++;
+                flag=1;
+            }
         }
-        c=c+1;
-  }
-  printf("%d %d %d\n", l,c,w);
-  fclose(fin);
-  return 0;
+        printf ( "Lines: %d\n", flag ? --l: l);
+        break;
+
+    case 'c':  case 'b':
+        while ( ( c=fgetc(fin) )!= EOF )
+            b++;
+
+        printf ("Bytes: %d\n", b);
+        break;
+
+    case 'w':
+        while ( ( c=fgetc(fin) )!=EOF ){
+            if ( c=='\n' || c=='\t' || c==' ' || c=='\r' ){
+                if ( flag ){
+                    w++;
+                    flag=0;
+                }
+            }
+            else{
+                printf ("%c", c );
+                flag=1;
+            }
+        }
+        printf ("Words: %d \n", flag? ++w: w);
+        break;
+    }
+
+    fclose(fin);
+    return 0;
 }
